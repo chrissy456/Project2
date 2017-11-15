@@ -5,7 +5,7 @@
 	end_line: .asciiz "Reached end of the string"
 	new_line: .asciiz "\n"
 	equals: .asciiz " = "
-	 	string: .space 9 
+	string: .space 9 
 	
 .text
          la $a0, prompt 
@@ -26,7 +26,24 @@
          li $v0,4
          syscall	 	
 
+	li $s0, 0
+	la $s1, prompt 
+	li $s4, 0
+count_loop:
+	lb $s0, 0($s1)  
+	addi $s4, $s4, 1 
+	addi $s1, $s1, 1 
+	beq $s0, 10, exit_count
+	beq $s0, 0, exit_count
+	j count_loop
 
+
+exit_count:
+	add $a0, $s4, $zero
+	li $v0, 1
+	syscall
+
+	
 	li $s0, 0
 	la $s1, string 	
 	li $s2, 0 
