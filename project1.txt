@@ -27,7 +27,11 @@
          syscall	 	
 
 	li $s0, 0
+<<<<<<< HEAD
 	la $s1, string
+=======
+	la $s1, prompt 
+>>>>>>> refs/remotes/origin/master
 	li $s4, 0
 count_loop:
 	lb $s0, 0($s1)  
@@ -57,11 +61,16 @@ loop:
 	
 	lb $s0, 0($s1)  
 	
+<<<<<<< HEAD
 	beq $s0, 10, exit_loop
 	beq $s0, 0, exit_loop
 	
 check_for_0_9:
 	
+=======
+
+check_for_0_9:
+>>>>>>> refs/remotes/origin/master
 	blt $s0, 48, error
 	bgt $s0, 57, check_for_A_F
 	
@@ -83,8 +92,11 @@ check_for_0_9:
          syscall
 	
 
+<<<<<<< HEAD
 	sub $s4, $s4, 1
 
+=======
+>>>>>>> refs/remotes/origin/master
 	j correct_input
 
 		
@@ -118,8 +130,12 @@ check_for_A_F:
 	 la $a0, new_line 
          li $v0,4
 	syscall 
+<<<<<<< HEAD
 		
 	sub $s4, $s4, 1       
+=======
+		       
+>>>>>>> refs/remotes/origin/master
 	j correct_input 
 	
      
@@ -151,7 +167,10 @@ check_for_a_f:
          syscall
 	 
 	
+<<<<<<< HEAD
 	sub $s4, $s4, 1
+=======
+>>>>>>> refs/remotes/origin/master
 	 j correct_input   
 
 
@@ -164,17 +183,24 @@ correct_input:
 	 la $a0, new_line
          li $v0,4
         syscall
+<<<<<<< HEAD
 	
 	add $a0, $s4, $zero
 	li $v0, 1
 	syscall
 
+=======
+>>>>>>> refs/remotes/origin/master
         
 	addi $s1, $s1, 1   
 	addi $s2, $s2, 1	
 
 	bne $s2, $s3, loop
+<<<<<<< HEAD
 	j exit_loop
+=======
+	j end_loop
+>>>>>>> refs/remotes/origin/master
 	
 			
 error:
@@ -183,8 +209,12 @@ error:
          syscall
  
        
+<<<<<<< HEAD
        
  exit_loop:
+=======
+ end_loop:
+>>>>>>> refs/remotes/origin/master
  	
 
 
@@ -196,4 +226,8 @@ error:
 	
         li $v0,10 #end program
         syscall
+<<<<<<< HEAD
     
+=======
+    
+>>>>>>> refs/remotes/origin/master
