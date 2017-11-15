@@ -1,0 +1,169 @@
+.data
+
+        prompt:  .asciiz "Type 8 characters or less --  "
+	bad_input: .asciiz "You did not type correct Hex number"
+	end_line: .asciiz "Reached end of the string"
+	new_line: .asciiz "\n"
+	equals: .asciiz " = "
+	 	string: .space 9 
+	
+.text
+         la $a0, prompt 
+         li $v0, 4
+         syscall
+        
+         
+         li $v0,8 
+         la $a0, string 
+         li $a1, 9   
+         syscall
+	
+         
+      
+	
+	
+	 la $a0,new_line 
+         li $v0,4
+         syscall	 	
+
+
+	li $s0, 0
+	la $s1, string 	
+	li $s2, 0 
+	li $s3, 9 
+	
+loop:
+	
+	lb $a0, 0($s1)  
+	li $v0, 11	
+	syscall
+	
+	lb $s0, 0($s1)  
+	
+
+check_for_0_9:
+	blt $s0, 48, error
+	bgt $s0, 57, check_for_A_F
+	
+
+	la $a0, equals
+        li $v0,4
+        syscall
+        
+	add $t0, $s0, $zero 
+	addi $t0, $t0, -48
+	 
+	
+	 li $v0, 1
+	 add $a0,$zero, $t0
+	 syscall
+	
+ 	 la $a0, new_line 
+         li $v0,4
+         syscall
+	
+
+	j correct_input
+
+		
+
+check_for_A_F:
+
+	
+       	blt $s0, 65, error
+	bgt $s0, 70, check_for_a_f
+	
+
+
+
+
+	 la $a0, equals 
+         li $v0,4
+         syscall
+
+         
+                  	 
+	 add $t0, $s0, $zero 
+	 addi $t0, $t0, -55
+	 
+	 
+
+	 li $v0, 1
+	 add $a0,$zero,  $t0
+	 syscall      
+	 
+	       
+	 la $a0, new_line 
+         li $v0,4
+	syscall 
+		       
+	j correct_input 
+	
+     
+
+check_for_a_f:
+
+       	blt $s0, 97, error
+	bgt $s0, 102, error
+	
+
+
+        
+	 la $a0, equals
+         li $v0,4
+         syscall
+         
+                           	 
+	 add $t0, $s0, $zero 
+	 addi $t0, $t0, -87
+ 
+	 
+
+	 li $v0, 1
+	 add $a0, $zero, $t0
+	 syscall
+	 
+	  la $a0, new_line 
+         li $v0,4
+         syscall
+	 
+	
+	 j correct_input   
+
+
+
+
+correct_input:
+       
+
+	
+	 la $a0, new_line
+         li $v0,4
+        syscall
+        
+	addi $s1, $s1, 1   
+	addi $s2, $s2, 1	
+
+	bne $s2, $s3, loop
+	j end_loop
+	
+			
+error:
+   	 la $a0, bad_input
+         li $v0, 4
+         syscall
+ 
+       
+ end_loop:
+ 	
+
+
+  	la $a0, end_line
+  	li $v0, 4
+  	syscall 
+  
+	
+	
+        li $v0,10 #end program
+        syscall
+    
