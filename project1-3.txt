@@ -1,0 +1,159 @@
+.data
+
+        prompt:  .asciiz "Type 8 characters or less --  "
+	bad_input: .asciiz "You did not type correct Hex number"
+	new_line: .asciiz "\n"
+	string: .space 9 
+.text
+         la $a0, prompt #printing the prompt
+         li $v0, 4
+         syscall
+        
+         
+         li $v0,8 	#getting the string
+         la $a0, string 
+         li $a1, 9   
+         syscall
+	
+         
+      
+	
+	
+	 la $a0,new_line #print line space
+         li $v0,4
+         syscall	 	
+
+	li $s0, 0	#this is for reading a character
+	la $s1, string	#this is for the string address
+	li $s4, 0	#this is the counter
+count_loop:
+	lb $s0, 0($s1)  #loads the character
+	addi $s4, $s4, 1 	#adds to count
+	addi $s1, $s1, 1 	#adds 1 byte
+	beq $s0, 10, exit_count #exit if null
+	beq $s0, 0, exit_count	#xit if press enter
+	j count_loop	#loop
+
+
+exit_count:
+
+	
+	li $s0, 0	#character
+	la $s1, string 	#string address
+	li $s2, 0 	#for looping
+	li $s3, 9 
+	addi $t0, $zero, 4
+	sub $s4, $s4, 2	#need to subtract length minus 2
+	mult $s4, $t0	
+	mflo $s5	#this is shift amount
+	li $s6, 0	#this is the sum
+	
+	
+loop:
+	
+	lb $s0, 0($s1)  	#loads the character
+	
+	beq $s0, 10, exit_loop	#exits if press enter
+	beq $s0, 0, exit_loop	#exits if null
+	
+check_for_0_9:
+	
+	blt $s0, 48, error	#checks if is in range of 0 -9
+	bgt $s0, 57, check_for_A_F
+	
+
+        
+	add $t0, $s0, $zero #converts it to decimal
+	addi $t0, $t0, -48
+	
+	
+	sllv $t0, $t0, $s5 #shifts
+	add $s6, $s6, $t0 #adds to sum
+	
+		
+	sub $s4, $s4, 1	#subtract count
+
+	j correct_input
+
+		
+
+check_for_A_F:
+
+	
+       	blt $s0, 65, error	#checks if in range of A - F
+	bgt $s0, 70, check_for_a_f
+	
+
+
+
+         
+                  	 
+	 add $t0, $s0, $zero #converts it  to decimal
+	 addi $t0, $t0, -55
+	 
+	
+	sllv $t0, $t0, $s5 #shifts
+	add $s6, $s6, $t0 #adds to sum
+	
+	sub $s4, $s4, 1       #subtracts count
+	j correct_input 
+	
+     
+
+check_for_a_f:
+
+       	blt $s0, 97, error #check if in range of a -f
+	bgt $s0, 102, error
+	
+
+                           	 
+	 add $t0, $s0, $zero #converts it to decimal
+	 addi $t0, $t0, -87
+ 
+	
+	
+	sllv $t0, $t0, $s5 #shifts
+	add $s6, $s6, $t0 #adds to sum
+	
+	sub $s4, $s4, 1 #subtracts count
+	 j correct_input   
+
+
+
+
+correct_input:
+      
+
+        
+	addi $s1, $s1, 1   #adds 1 byte to string address
+	addi $s2, $s2, 1  #adds to loop counter
+	sub $s5, $s5, 4 #subtracts shift amount
+
+	
+	bne $s2, $s3, loop	#exits if loop over
+	j exit_loop
+	
+			
+error:
+   	 la $a0, bad_input #prints bad input
+         li $v0, 4
+         syscall
+ 
+ 
+        li $v0,10 #end program
+        syscall
+       
+       
+ exit_loop:
+ 
+  
+	
+	la $a0, ($s6) #prints sum
+  	li $v0, 1
+  	syscall
+  
+	
+	
+        li $v0,10 #end program
+        syscall
+    
